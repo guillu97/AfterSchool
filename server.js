@@ -1,8 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require('path')
+const favicon = require('serve-favicon')
+
+const { authJwt } = require("./app/middleware");
 
 const app = express();
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -43,6 +49,9 @@ app.set('view engine', 'ejs');
 
 // index page
 app.get('/', function(req, res) {
+
+  const [connected, userId] = authJwt.verifyTokenReturn(req, res)
+
   var mascots = [
       { name: 'Sammy', organization: "DigitalOcean", birth_year: 2012},
       { name: 'Tux', organization: "Linux", birth_year: 1996},
@@ -50,10 +59,20 @@ app.get('/', function(req, res) {
   ];
   var tagline = "No programming concept is complete without a cute animal mascot.";
 
-  res.render('pages/index', {
+  if(connected){
+
+    // TODO: get user to send it to the view
+
+    res.render('pages/main', {
+      userId: userId,
+    });
+  }
+  else{
+    res.render('pages/index', {
       mascots: mascots,
       tagline: tagline
-  });
+    });
+  }
 });
 
 // about page

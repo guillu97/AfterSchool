@@ -4,6 +4,7 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
+//#region for the API
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
@@ -19,6 +20,8 @@ verifyToken = (req, res, next) => {
     next();
   });
 };
+
+
 
 isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
@@ -81,9 +84,34 @@ isModerator = (req, res, next) => {
     );
   });
 };
+//#endregion
+
+//#region for the Website
+
+verifyTokenReturn = (req, res) => {
+  let token = req.headers["x-access-token"];
+
+  if (!token) {
+    // No token provided
+    return [403,""]
+  }
+
+  // Unauthorized
+  let result = [401,""]
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (!err) {
+      req.userId = decoded.id;
+      result = [200, decoded.id]
+    }
+  });
+  return result
+};
+
+//#endregion
 
 const authJwt = {
   verifyToken,
+  verifyTokenReturn,
   isAdmin,
   isModerator
 };
