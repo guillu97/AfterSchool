@@ -93,15 +93,15 @@ verifyTokenReturn = (req, res) => {
 
   if (!token) {
     // No token provided
-    return [403,""]
+    return [false,403,""]
   }
 
   // Unauthorized
-  let result = [401,""]
+  let result = [false,401,""]
   jwt.verify(token, config.secret, (err, decoded) => {
     if (!err) {
       req.userId = decoded.id;
-      result = [200, decoded.id]
+      result = [true,200, decoded.id]
     }
   });
   return result

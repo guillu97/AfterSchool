@@ -8,7 +8,7 @@ const { authJwt } = require("./app/middleware");
 
 const app = express();
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'public', 'favicon.svg')))
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -50,14 +50,9 @@ app.set('view engine', 'ejs');
 // index page
 app.get('/', function(req, res) {
 
-  const [connected, userId] = authJwt.verifyTokenReturn(req, res)
+  const [connected, response, userId] = authJwt.verifyTokenReturn(req, res)
 
-  var mascots = [
-      { name: 'Sammy', organization: "DigitalOcean", birth_year: 2012},
-      { name: 'Tux', organization: "Linux", birth_year: 1996},
-      { name: 'Moby Dock', organization: "Docker", birth_year: 2013}
-  ];
-  var tagline = "No programming concept is complete without a cute animal mascot.";
+  // console.log(connected,response, userId)
 
   if(connected){
 
@@ -68,10 +63,32 @@ app.get('/', function(req, res) {
     });
   }
   else{
-    res.render('pages/index', {
-      mascots: mascots,
-      tagline: tagline
+    res.render('pages/index', {});
+  }
+});
+
+
+
+app.get('/signin', function(req, res) {
+
+  let mobile = 0
+
+  if(req.query.mobile === "1"){
+    mobile = 1
+  }
+
+  const [connected, userId] = authJwt.verifyTokenReturn(req, res)
+
+  if(connected){
+
+    // TODO: get user to send it to the view
+
+    res.render('pages/main', {
+      userId: userId,
     });
+  }
+  else{
+    res.render('pages/signin', {mobile:mobile});
   }
 });
 
