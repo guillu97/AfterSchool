@@ -8,6 +8,26 @@ const { authJwt } = require("./app/middleware");
 
 const app = express();
 
+const session = require('express-session');
+
+const useragent = require('express-useragent');
+
+const db = require("./app/models");
+const Role = db.role;
+
+const dbConfig = require("./app/config/db.config");
+
+const passAuthConfig = require("./app/config/auth.config")
+
+
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: passAuthConfig.secret // TODO: change in production
+}));
+
+app.use(useragent.express());
+
 app.use(favicon(path.join(__dirname, 'public', 'favicon.svg')))
 
 var corsOptions = {
@@ -24,10 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-const db = require("./app/models");
-const Role = db.role;
 
-const dbConfig = require("./app/config/db.config");
 
 db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
@@ -69,13 +86,10 @@ app.get('/', function(req, res) {
 
 
 
+
+
 app.get('/signin', function(req, res) {
-
-  let mobile = 0
-
-  if(req.query.mobile === "1"){
-    mobile = 1
-  }
+  // console.log("mobile:",req.useragent.isMobile)
 
   const [connected, userId] = authJwt.verifyTokenReturn(req, res)
 
@@ -88,7 +102,24 @@ app.get('/signin', function(req, res) {
     });
   }
   else{
-    res.render('pages/signin', {mobile:mobile});
+    res.render('pages/signin', {mobile:req.useragent.isMobile});
+  }
+});
+
+app.get('/register', function(req, res) {
+
+  const [connected, userId] = authJwt.verifyTokenReturn(req, res)
+
+  if(connected){
+
+    // TODO: get user to send it to the view
+
+    res.render('pages/main', {
+      userId: userId,
+    });
+  }
+  else{
+    res.render('pages/register', {mobile:req.useragent.isMobile});
   }
 });
 
@@ -106,9 +137,15 @@ app.use('/static', express.static('public'));
 //   res.json({ message: "Welcome to bezkoder application." });
 // });
 
+// app.get('/google', function(req, res) {
+//   res.render('pages/auth');
+// });
+
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
+
+require('./googleAuth/')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

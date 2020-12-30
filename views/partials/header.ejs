@@ -1,19 +1,27 @@
 <nav>
   <div class="nav-wrapper">
-    <a href="/" class="brand-logo"><img src="/static/favicon.svg" width="30" height="30" alt="">AfterSchool</a>
+    <a href="/" class="brand-logo center"><img src="/static/favicon.svg" width="30" height="30" alt="">AfterSchool</a>
     <a href="/" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <ul class="left hide-on-med-and-down">
+      <li><a class="waves-effect waves-light" href="/">Home</a></li>
+      <li><a class="waves-effect waves-light" href="/about">About</a></li>
+    </ul>
     <ul class="right hide-on-med-and-down">
-      <li><a href="/">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="javascript:TINY.box.show({url:'/signin',width:300,height:160,openjs:'initPopupLogin',opacity:30})">Signin</a></li>
+      <li><a class="waves-effect waves-light" href="/register">Register</a></li>
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      <li><a class="waves-effect waves-light" href="/signin">Sign in</a></li>
     </ul>
   </div>
 </nav>
+<!-- NB tiny box 300 160 -->
+
 
 <ul class="sidenav" id="mobile-demo">
   <li><a href="/">Home</a></li>
   <li><a href="/about">About</a></li>
-  <li><a href="/signin?mobile=1">Signin</a></li>
+  <li><a href="/signin">Sign in</a></li>
+  <li><a href="/register">Register</a></li>
 </ul>
         
 
