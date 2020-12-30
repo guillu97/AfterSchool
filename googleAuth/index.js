@@ -46,8 +46,10 @@ module.exports = function(app) {
   /*  Google AUTH  */
   
   const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-  const GOOGLE_CLIENT_ID = '640717809616-32nvqr7vphpeu06e09stnhcf1hbcp01f.apps.googleusercontent.com';
-  const GOOGLE_CLIENT_SECRET = 'RJ5fxM8IuLLtcAa1txZXfrBd';
+  
+ const GOOGLE_CLIENT_ID = require('./config').GOOGLE_CLIENT_ID
+ const GOOGLE_CLIENT_SECRET = require('./config').GOOGLE_CLIENT_SECRET
+
   passport.use(new GoogleStrategy({
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
@@ -70,7 +72,7 @@ module.exports = function(app) {
       console.log(req.user)
       console.log(" ")
       console.log(" ")
-      res.render('pages/success',{user:req.user})
+      res.render('pages/main',{user:req.user})
     }
   );
 }

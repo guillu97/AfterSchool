@@ -2,3 +2,4 @@ node_modules
 icons
 public
 package-lock.json
+googleAuth/config.js
