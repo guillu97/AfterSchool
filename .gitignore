@@ -3,3 +3,5 @@ icons
 public
 package-lock.json
 googleAuth/config.js
+app/config/auth.config.js
+app/config/db.config.js
